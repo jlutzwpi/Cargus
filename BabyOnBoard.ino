@@ -19,7 +19,7 @@
 //#define serialNotecard Serial1
 #define serialDebug Serial
 
-#define productUID "edu.wpi.alum.jlutz:baby_on_board"
+#define productUID "xxxxx"
 Notecard notecard;
 I2CDriver i2c = I2CDriver();
 //results struct from the useful sensor
@@ -109,8 +109,8 @@ void loop()
         Serial.print((float(delta) / 60.0));
         Serial.println(" minutes.");
         delay(20000); 
-        //if current time is > 2 minutes from last motion, send text alert (ie baby is detected, but car is not moving)
-        if(delta > 120 && textSent == false)
+        //if current time is > 5 minutes from last motion, send text alert (ie baby is detected, but car is not moving)
+        if(delta > 300 && textSent == false)
         {
           req = notecard.newRequest("note.add");
           if (req != NULL) {
@@ -118,8 +118,8 @@ void loop()
               JAddBoolToObject(req, "sync", true);
               J *body = JCreateObject();
               if (body != NULL) {
-                  JAddStringToObject(body, "customMessage", "Check on child! No movement in 5 minutes.");
-                  JAddStringToObject(body, "customTo", "+15083080654");
+                  JAddStringToObject(body, "customMessage", "Baby detected in the car and the car is motionless.  Check on the baby!");
+                  JAddStringToObject(body, "customTo", "+xxxxxxxxxx");
                   JAddItemToObject(req, "body", body);
               }
               notecard.sendRequest(req);
@@ -127,7 +127,7 @@ void loop()
           }
           textSent = true;
         }
-        //sent another reminder at 10 minutes
+        //send another reminder at 10 minutes
         if(delta > 600)
           textSent = false;
       }
